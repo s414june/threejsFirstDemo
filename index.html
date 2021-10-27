@@ -15,9 +15,11 @@
             background-color: #1a1a1a;
             overflow-x: hidden;
         }
-        .outside{
+
+        .outside {
             height: 200vh;
         }
+
         canvas {
             width: 100%;
             height: 100%;
@@ -39,6 +41,12 @@
             color: #ffffff;
             font-size: 5rem;
             font-family: 'Poppins', sans-serif;
+        }
+
+        @media screen and (max-width: 800px) {
+            .container h1 {
+                font-size: calc(100vw / 10);
+            }
         }
     </style>
     <script src="js/three.js"></script>
@@ -114,34 +122,34 @@
 
         const windowX = window.innerWidth / 2;
         const windowY = window.innerHeight / 2;
-        
+
         const clock = new THREE.Clock();
-        
+
         const tick = () => {
             targetX = mouseX * .001
             targetY = mouseY * .001
-            
+
             const elapsedTime = clock.getElapsedTime();
 
             shpere.rotation.y = .5 * elapsedTime;
-            
+
             shpere.rotation.y += .5 * (targetX - shpere.rotation.y);
             shpere.rotation.x += .5 * (targetY - shpere.rotation.x);
             // shpere.rotation.z += .5 * (targetY - shpere.rotation.x);
             shpere.position.z += 2 * (targetY - shpere.rotation.x);
         }
-        
-        
+
+
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX - windowX
             mouseY = e.clientY - windowY
             tick()
         })
-        document.addEventListener('scroll', (e)=>{
-            let percent = (windowY - window.pageYOffset)/windowY
+        document.addEventListener('scroll', (e) => {
+            let percent = (windowY - window.pageYOffset) / windowY
             meterial.opacity = percent
             document.querySelector(".container h1").style.opacity = percent
-            
+
         })
     </script>
 </body>

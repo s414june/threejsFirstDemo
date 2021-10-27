@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>three.js test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: #1a1a1a;
+            overflow-x: hidden;
+        }
+        .outside{
+            height: 200vh;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        .container {
+            height: 100vh;
+            width: 100vw;
+            display: grid;
+            place-items: center;
+            position: absolute;
+            mix-blend-mode: exclusion;
+            background-color: #1a1a1a;
+            z-index: 2;
+        }
+
+        .container h1 {
+            color: #ffffff;
+            font-size: 5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+    <script src="js/three.js"></script>
+</head>
+
+<body>
+    <div class="outside">
+        <div class="container">
+            <h1>Feel this Sphere</h1>
+        </div>
+        <div class="canvas-outside"></div>
+    </div>
+    <script>
+
+        //loading
+        const textureLoader = new THREE.TextureLoader();
+        const normalTexture = textureLoader.load('./img/normalMap.png')
+
+        //camera相機
+        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 3
+        camera.lookAt(new THREE.Vector3(0, 0, 0))
+
+        let renderer = new THREE.WebGLRenderer({
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        //canvas
+        document.querySelector(".canvas-outside").appendChild(renderer.domElement);
+
+        //scene
+        let scene = new THREE.Scene();
+
+        //object(物件)
+        let geometry = new THREE.SphereGeometry(.5, 32, 32);
+        //meterial(材質)
+        let meterial = new THREE.MeshStandardMaterial({ color: "#000000" });
+        meterial.metalness = 0.7;
+        meterial.roughness = 0.2;
+        meterial.normalMap = normalTexture;
+        meterial.transparent = true;
+        //mesh(網格)
+        let shpere = new THREE.Mesh(geometry, meterial);
+        scene.add(shpere);
+
+        //光源
+        var light = new THREE.PointLight("#ffffff", 1);
+        light.position.set(5000, 5000, 5000);
+        scene.add(light);
+
+        //光源
+        var light2 = new THREE.PointLight("#800000", 100);
+        light2.position.set(-50, 50, -50);
+        scene.add(light2);
+
+        //光源
+        var light3 = new THREE.PointLight("#00ccff", 80);
+        light3.position.set(50, -80, -50);
+        scene.add(light3);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            shpere.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        let targetX = 0;
+        let targetY = 0;
+
+        const windowX = window.innerWidth / 2;
+        const windowY = window.innerHeight / 2;
+        
+        const clock = new THREE.Clock();
+        
+        const tick = () => {
+            targetX = mouseX * .001
+            targetY = mouseY * .001
+            
+            const elapsedTime = clock.getElapsedTime();
+
+            shpere.rotation.y = .5 * elapsedTime;
+            
+            shpere.rotation.y += .5 * (targetX - shpere.rotation.y);
+            shpere.rotation.x += .5 * (targetY - shpere.rotation.x);
+            // shpere.rotation.z += .5 * (targetY - shpere.rotation.x);
+            shpere.position.z += 2 * (targetY - shpere.rotation.x);
+        }
+        
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX - windowX
+            mouseY = e.clientY - windowY
+            tick()
+        })
+        document.addEventListener('scroll', (e)=>{
+            let percent = (windowY - window.pageYOffset)/windowY
+            meterial.opacity = percent
+            document.querySelector(".container h1").style.opacity = percent
+            
+        })
+    </script>
+</body>
+
+</html>

@@ -16,9 +16,9 @@
             overflow-x: hidden;
         }
 
-        .outside {
+        /* .outside {
             height: 200vh;
-        }
+        } */
 
         canvas {
             width: 100%;
@@ -33,7 +33,7 @@
             place-items: center;
             position: absolute;
             mix-blend-mode: exclusion;
-            background-color: #1a1a1a;
+            background: linear-gradient(100deg, #3a0000, #09002b);
             z-index: 2;
         }
 
@@ -66,7 +66,7 @@
         const normalTexture = textureLoader.load('./img/normalMap.png')
 
         //camera相機
-        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 3
         camera.lookAt(new THREE.Vector3(0, 0, 0))
 
